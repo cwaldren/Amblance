@@ -33,9 +33,11 @@ void TutorialApplication::createScene(void)
 	
 	Ogre::Entity* entAmbulance = mSceneMgr->createEntity("Ambulance", "amblance.mesh");
 	entAmbulance->setCastShadows(true);
+	entAmbulance->setMaterialName("Amblance/Amblance");
+	
 	Ogre::SceneNode *node = mSceneMgr->getRootSceneNode()->createChildSceneNode("AmbulanceNode");
 	node->attachObject(entAmbulance);
-	node->scale(Ogre::Vector3(5,5,5));
+	node->scale(Ogre::Vector3(5,4,5));
 	node->setPosition(0,20, 100);
 	
 	Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
@@ -61,11 +63,10 @@ void TutorialApplication::createScene(void)
 
 
 	Ogre::Light* pointLight = mSceneMgr->createLight("pointLight");
-	pointLight->setType(Ogre::Light::LT_SPOTLIGHT);
+	pointLight->setType(Ogre::Light::LT_POINT);
 	pointLight->setPosition(Ogre::Vector3(200,200,0));
-	pointLight->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));
 
-	pointLight->setDirection(Ogre::Vector3(-1,-1,0));
+	
 	pointLight->setDiffuseColour(Ogre::ColourValue::White);
 	pointLight->setSpecularColour(Ogre::ColourValue::White);
 	//pointLight->setAttenuation(10000,1,1,1);
@@ -90,10 +91,10 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 
 	Ogre::Vector3 transVector = Ogre::Vector3::ZERO;
 	if (mKeyboard->isKeyDown(OIS::KC_I)) {
-		transVector.z -= mMove;
+		transVector.z += mMove;
 	}
 	if (mKeyboard->isKeyDown(OIS::KC_K)) {
-		transVector.z += mMove;
+		transVector.z -= mMove;
 	}
 	if (mKeyboard->isKeyDown(OIS::KC_J)) {
 		if(mKeyboard->isKeyDown( OIS::KC_LSHIFT )) {
@@ -125,12 +126,20 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 
 bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
-	bool ret = BaseApplication::frameRenderingQueued(evt);
-	if(!processUnbufferedInput(evt)) return false;
-
-    return ret;
+	return true;
 }
 
+void TutorialApplication::createFrameListener(void) 
+{
+	BaseApplication::createFrameListener();
+}
+
+bool TutorialApplication::keyPressed( const OIS::KeyEvent& evt ){return true;}
+bool TutorialApplication::keyReleased( const OIS::KeyEvent& evt ){return true;}
+// OIS::MouseListener
+bool TutorialApplication::mouseMoved( const OIS::MouseEvent& evt ){return true;}
+bool TutorialApplication::mousePressed( const OIS::MouseEvent& evt, OIS::MouseButtonID id ){return true;}
+bool TutorialApplication::mouseReleased( const OIS::MouseEvent& evt, OIS::MouseButtonID id ){return true;}
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN
