@@ -1,0 +1,16 @@
+**/boost/
+**/CMake/
+**/Debug/
+**/bin/
+**/Docs/
+**/include/
+**/lib/
+**/Samples/
+**/Win32/
+**.vcxproj
+**.filters
+CMakeLists.txt
+**.cmake
+**.sln
+**.suo
+**.sdf

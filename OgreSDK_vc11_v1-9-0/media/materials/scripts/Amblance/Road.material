@@ -1,0 +1,18 @@
+material Amblance/Road
+ {
+    technique
+    {
+       pass
+        {
+          texture_unit
+          {
+            
+            texture road.png
+            filtering anisotropic
+            max_anisotropy 10
+            tex_address_mode wrap
+            
+          }
+       }   
+    }
+ }
