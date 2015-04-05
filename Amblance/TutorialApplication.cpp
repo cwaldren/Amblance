@@ -30,8 +30,10 @@ void TutorialApplication::createScene(void)
 {
 	mSceneMgr->setAmbientLight(Ogre::ColourValue(0.15, 0.15, 0.15));
 	mSceneMgr->setShadowTechnique(Ogre::SHADOWDETAILTYPE_TEXTURE);
-
+	mSceneMgr->setShadowTextureFSAA(2);
+	mSceneMgr->setShadowTextureSize(2048);
 	
+
 	Ogre::Entity* entAmbulance = mSceneMgr->createEntity("Ambulance", "amblance.mesh");
 	entAmbulance->setCastShadows(true);
 	entAmbulance->setMaterialName("Amblance/Amblance");
@@ -39,20 +41,21 @@ void TutorialApplication::createScene(void)
 	Ogre::SceneNode *node = mSceneMgr->getRootSceneNode()->createChildSceneNode("AmbulanceNode");
 	node->attachObject(entAmbulance);
 	//-----------
-	Ogre::SceneNode* node2 = node->createChildSceneNode("CameraNode", Ogre::Vector3(0,-10,-25));
+	Ogre::SceneNode* node2 = node->createChildSceneNode("CameraNode", Ogre::Vector3(0,20,-25));
 	node2->attachObject(mCamera);
 	//------------
-	node->scale(Ogre::Vector3(5,4,5));
-	node->setPosition(0,25, 100);
+	node->scale(Ogre::Vector3(20,16,20));
+	node->setPosition(0,85, 100);
 	
 	Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
-	Ogre::Plane road(Ogre::Vector3::UNIT_Y, 4);
+	Ogre::Plane road(Ogre::Vector3::UNIT_Y, 1);
 
+	
 	Ogre::MeshManager::getSingleton().createPlane("ground", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
-		plane, 2048*40, 2048*40, 20, 20, true, 1, 400, 400, Ogre::Vector3::UNIT_Z);
+		plane, 2048*40, 2048*40, 100, 100, true, 1, 400, 400, Ogre::Vector3::UNIT_Z);
 	
 	Ogre::MeshManager::getSingleton().createPlane("road", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
-		road, 256,2048 * 40, 12, 12, true, 1, 1, 400, Ogre::Vector3::UNIT_Z);
+		road, 512,2048 * 40, 100, 100, true, 1, 1, 400, Ogre::Vector3::UNIT_Z);
 
 	Ogre::Entity* entGround = mSceneMgr->createEntity("GroundEntity", "ground");
 	Ogre::Entity* entRoad   = mSceneMgr->createEntity("RoadEntity", "road");
@@ -65,14 +68,28 @@ void TutorialApplication::createScene(void)
 
 	entRoad->setMaterialName("Amblance/Road");
 	entRoad->setCastShadows(false);
+	/*
+	Ogre::Light* spotLight = mSceneMgr->createLight("spot");
+	spotLight->setType(Ogre::Light::LT_SPOTLIGHT);
+	spotLight->setPosition(Ogre::Vector3(0, 500, 100));
+	spotLight->setSpotlightInnerAngle(Ogre::Degree(20));
+	spotLight->setSpotlightOuterAngle(Ogre::Degree(22));
+	
+	spotLight->setDirection(Ogre::Vector3(0,-1,0));
+	spotLight->setDiffuseColour(Ogre::ColourValue::White);
+	spotLight->setSpecularColour(Ogre::ColourValue::White);
+	*/
 
-
-	Ogre::Light* sun = mSceneMgr->createLight("sun");
-	sun->setType(Ogre::Light::LT_DIRECTIONAL);
 
 	
-	sun->setDiffuseColour(Ogre::ColourValue::White);
-	sun->setSpecularColour(Ogre::ColourValue::White);
+	Ogre::Light* sun = mSceneMgr->createLight("sun");
+	sun->setType(Ogre::Light::LT_DIRECTIONAL);
+	
+
+	sun->setDiffuseColour(Ogre::ColourValue(.6, .6, .6));
+	sun->setSpecularColour(Ogre::ColourValue(.6, .6, .6));
+
+	
 	sun->setDirection(.3, -.8, -1);
 	
 
@@ -125,7 +142,7 @@ void TutorialApplication::createFrameListener(void)
 {
 	BaseApplication::createFrameListener();
 	mRotate = .13;
-	mMove = 250;
+	mMove = 512;
 	mDirection = Ogre::Vector3::ZERO;
 	mCameraDirection = Ogre::Vector3::ZERO;
 }

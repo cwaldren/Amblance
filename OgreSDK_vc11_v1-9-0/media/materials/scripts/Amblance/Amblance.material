@@ -1,16 +1,59 @@
-
+vertex_program Simple_Perpixel_Vert cg 
+ { 
+       source ARNOLD.cg 
+ 
+       default_params 
+       { 
+                param_named_auto lightPosition light_position_object_space 0
+                 param_named_auto eyePosition camera_position_object_space
+ 
+                param_named_auto worldviewproj worldviewproj_matrix
+       } 
+ 
+       entry_point Simple_Perpixel_Vert 
+       profiles vs_1_1 arbvp1 
+ } 
+ 
+ fragment_program Simple_PerPixel_Frag cg 
+ { 
+       source ARNOLD.cg 
+ 
+       default_params 
+       {
+                  param_named_auto lightDiffuse light_diffuse_colour 0
+         param_named_auto lightSpecular light_specular_colour 0
+ 
+         param_named exponent float 56
+             //VERY high value, to produce large highlights
+ 
+         param_named ambient float4 0.0 0.0 0.0 1.0
+             //faint environment lighting
+       } 
+ 
+       entry_point Simple_PerPixel_Frag
+       profiles ps_2_0 arbfp1
+ }
+ 
 material Amblance/Amblance
 {
     receive_shadows on 
 
     technique
     {
+    pass
+        {    
+             vertex_program_ref Ambient
+            {
+           }
+      }
         pass 
         {
-           // ambient 0.3567536771297455 0.2668800354003906 0.800000011920929 1.0
+        // iteration once_per_light
+         // scene_blend add
+  // ambient 0.3567536771297455 0.2668800354003906 0.800000011920929 1.0
             //diffuse 0.2854029459566316 0.21350403150177044 0.6400000190734865 1.0
-            specular 0.5 0.5 0.5 1.0 12.5
-            emissive 0.0 0.0 0.0 1.0
+            //specular 0.5 0.5 0.5 1.0 12.5
+            //emissive 0.0 0.0 0.0 1.0
 
             alpha_to_coverage off
             colour_write on
@@ -28,6 +71,14 @@ material Amblance/Amblance
             scene_blend_op add
             shading gouraud
             transparent_sorting on
+         
+            vertex_program_ref Simple_Perpixel_Vert
+          { 
+          } 
+ 
+          fragment_program_ref Simple_PerPixel_Frag
+          { 
+          } 
 
             texture_unit 
             {
