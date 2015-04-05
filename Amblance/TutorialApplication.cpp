@@ -29,7 +29,8 @@ TutorialApplication::~TutorialApplication(void)
 void TutorialApplication::createScene(void)
 {
 	mSceneMgr->setAmbientLight(Ogre::ColourValue(0.15, 0.15, 0.15));
-	mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
+	mSceneMgr->setShadowTechnique(Ogre::SHADOWDETAILTYPE_TEXTURE);
+
 	
 	Ogre::Entity* entAmbulance = mSceneMgr->createEntity("Ambulance", "amblance.mesh");
 	entAmbulance->setCastShadows(true);
@@ -115,6 +116,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	mTrayMgr->frameRenderingQueued(evt);
 	mSceneMgr->getSceneNode("AmbulanceNode")->translate(mDirection * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 	mSceneMgr->getSceneNode("AmbulanceNode")->getChild("CameraNode")->translate(mCameraDirection * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+	mCamera->lookAt(mSceneMgr->getSceneNode("AmbulanceNode")->getPosition()+Ogre::Vector3(0,0,100));
 
 	return true;
 }
