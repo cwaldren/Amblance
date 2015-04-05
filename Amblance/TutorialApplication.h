@@ -47,9 +47,14 @@ protected:
 
 	Ogre::Real mRotate;
 	Ogre::Real mMove;
+	Ogre::Real leftBound;
+	Ogre::Real rightBound;
+	Ogre::Real respawnDist;
 	Ogre::Vector3 mDirection;
 	Ogre::Vector3 mCameraDirection;
 	OgreBites::Label* mInfoLabel;
+	Ogre::Vector3 mCarMoveT;
+	Ogre::Vector3 mCarMoveA;
 
 private:
 	bool processUnbufferedInput(const Ogre::FrameEvent& evt);
