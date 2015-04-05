@@ -38,13 +38,11 @@ void TutorialApplication::createScene(void)
 	Ogre::SceneNode *node = mSceneMgr->getRootSceneNode()->createChildSceneNode("AmbulanceNode");
 	node->attachObject(entAmbulance);
 	//-----------
-	Ogre::SceneNode* node2 = node->createChildSceneNode(
-	Ogre::Vector3(0,0,-35));
+	Ogre::SceneNode* node2 = node->createChildSceneNode("CameraNode", Ogre::Vector3(0,-10,-25));
 	node2->attachObject(mCamera);
 	//------------
-	node->scale(Ogre::Vector3(5,5,5));
 	node->scale(Ogre::Vector3(5,4,5));
-	node->setPosition(0,20, 100);
+	node->setPosition(0,25, 100);
 	
 	Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
 	Ogre::Plane road(Ogre::Vector3::UNIT_Y, 4);
@@ -68,14 +66,13 @@ void TutorialApplication::createScene(void)
 	entRoad->setCastShadows(false);
 
 
-	Ogre::Light* pointLight = mSceneMgr->createLight("pointLight");
-	pointLight->setType(Ogre::Light::LT_POINT);
-	pointLight->setPosition(Ogre::Vector3(200,200,0));
+	Ogre::Light* sun = mSceneMgr->createLight("sun");
+	sun->setType(Ogre::Light::LT_DIRECTIONAL);
 
 	
-	pointLight->setDiffuseColour(Ogre::ColourValue::White);
-	pointLight->setSpecularColour(Ogre::ColourValue::White);
-	//pointLight->setAttenuation(10000,1,1,1);
+	sun->setDiffuseColour(Ogre::ColourValue::White);
+	sun->setSpecularColour(Ogre::ColourValue::White);
+	sun->setDirection(.3, -.8, -1);
 	
 
 }
@@ -117,7 +114,8 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	mMouse->capture();
 	mTrayMgr->frameRenderingQueued(evt);
 	mSceneMgr->getSceneNode("AmbulanceNode")->translate(mDirection * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
-	
+	mSceneMgr->getSceneNode("AmbulanceNode")->getChild("CameraNode")->translate(mCameraDirection * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+
 	return true;
 }
 
@@ -127,6 +125,7 @@ void TutorialApplication::createFrameListener(void)
 	mRotate = .13;
 	mMove = 250;
 	mDirection = Ogre::Vector3::ZERO;
+	mCameraDirection = Ogre::Vector3::ZERO;
 }
 
 bool TutorialApplication::keyPressed( const OIS::KeyEvent& evt )
@@ -137,16 +136,22 @@ bool TutorialApplication::keyPressed( const OIS::KeyEvent& evt )
 		mShutDown = true;
 		break;
 	case OIS::KC_W:
-		mDirection.z = -mMove;
-		break;
-	case OIS::KC_S:
 		mDirection.z = mMove;
 		break;
+	case OIS::KC_S:
+		mDirection.z = -mMove;
+		break;
 	case OIS::KC_A:
-		mDirection.x = -mMove;
+		mDirection.x = mMove;
 		break;
 	case OIS::KC_D:
-		mDirection.x = mMove;
+		mDirection.x = -mMove;
+		break;
+	case OIS::KC_PGDOWN:
+		mCameraDirection.y = 10;
+		break;
+	case OIS::KC_PGUP:
+		mCameraDirection.y = -10;
 		break;
 
 	default:
@@ -172,6 +177,13 @@ bool TutorialApplication::keyReleased( const OIS::KeyEvent& evt )
  
 	case OIS::KC_D:
 		mDirection.x = 0;
+		break;
+
+	case OIS::KC_PGDOWN:
+		mCameraDirection.y = 0;
+		break;
+	case OIS::KC_PGUP:
+		mCameraDirection.y = 0;
 		break;
 	default:
 		break;

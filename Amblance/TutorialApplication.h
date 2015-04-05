@@ -41,8 +41,9 @@ protected:
 
 	Ogre::Real mRotate;
 	Ogre::Real mMove;
-	Ogre::SceneNode *mCamNode;
 	Ogre::Vector3 mDirection;
+	Ogre::Vector3 mCameraDirection;
+
 private:
 	bool processUnbufferedInput(const Ogre::FrameEvent& evt);
 
