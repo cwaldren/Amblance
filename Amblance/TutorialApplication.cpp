@@ -37,16 +37,16 @@ void TutorialApplication::createScene(void)
 	
 	Ogre::SceneNode *node = mSceneMgr->getRootSceneNode()->createChildSceneNode("AmbulanceNode");
 	node->attachObject(entAmbulance);
-<<<<<<< HEAD
+
 	//-----------
 	Ogre::SceneNode* node2 = node->createChildSceneNode(
 		Ogre::Vector3(0,0,-35));
 	node2->attachObject(mCamera);
 	//------------
 	node->scale(Ogre::Vector3(5,5,5));
-=======
+
 	node->scale(Ogre::Vector3(5,4,5));
->>>>>>> b8ceb78c38c84e71e5a5701390eda050a77d9696
+
 	node->setPosition(0,20, 100);
 	
 	Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);

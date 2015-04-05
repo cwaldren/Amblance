@@ -27,12 +27,12 @@ public:
 
 protected:
     virtual void createScene(void);
-<<<<<<< HEAD
+
 	virtual void createCamera(void);
 	virtual void createViewport(void);
-=======
+
 	virtual void createFrameListener(void);
->>>>>>> b8ceb78c38c84e71e5a5701390eda050a77d9696
+
 	virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 	
 	virtual bool keyPressed(const OIS::KeyEvent& evt);
