@@ -43,9 +43,7 @@ void TutorialApplication::createScene(void)
 	node2->attachObject(mCamera);
 	//------------
 
-	node->scale(Ogre::Vector3(5,4,5));
 
-	node->setPosition(0,20, 100);
 	node->scale(Ogre::Vector3(5,4,5));
 	node->setPosition(0,25, 100);
 
