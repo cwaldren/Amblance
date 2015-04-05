@@ -37,6 +37,12 @@ void TutorialApplication::createScene(void)
 	
 	Ogre::SceneNode *node = mSceneMgr->getRootSceneNode()->createChildSceneNode("AmbulanceNode");
 	node->attachObject(entAmbulance);
+	//-----------
+	Ogre::SceneNode* node2 = node->createChildSceneNode(
+	Ogre::Vector3(0,0,-35));
+	node2->attachObject(mCamera);
+	//------------
+	node->scale(Ogre::Vector3(5,5,5));
 	node->scale(Ogre::Vector3(5,4,5));
 	node->setPosition(0,20, 100);
 	
@@ -72,6 +78,33 @@ void TutorialApplication::createScene(void)
 	//pointLight->setAttenuation(10000,1,1,1);
 	
 
+}
+
+
+void TutorialApplication::createCamera()
+{
+	// Create the camera
+    mCamera = mSceneMgr->createCamera("PlayerCam");
+
+    // Position it at 500 in Z direction
+    mCamera->setPosition(Ogre::Vector3(0,150,-70));
+    // Look back along -Z
+    mCamera->lookAt(Ogre::Vector3(0,60,100));
+    mCamera->setNearClipDistance(5);
+
+	mCameraMan = 0;
+    mCameraMan = new OgreBites::SdkCameraMan(mCamera);
+}
+
+void TutorialApplication::createViewport(void)
+{
+    // Create one viewport, entire window
+    Ogre::Viewport* vp = mWindow->addViewport(mCamera);
+    vp->setBackgroundColour(Ogre::ColourValue(0,0,0));
+
+    // Alter the camera aspect ratio to match the viewport
+    mCamera->setAspectRatio(
+        Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
 }
 
 
