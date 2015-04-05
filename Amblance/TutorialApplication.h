@@ -43,6 +43,7 @@ protected:
 	Ogre::Real mMove;
 	Ogre::Vector3 mDirection;
 	Ogre::Vector3 mCameraDirection;
+	OgreBites::Label* mInfoLabel;
 
 private:
 	bool processUnbufferedInput(const Ogre::FrameEvent& evt);

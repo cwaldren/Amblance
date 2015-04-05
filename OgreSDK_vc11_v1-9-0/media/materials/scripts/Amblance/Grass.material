@@ -47,8 +47,8 @@ material Amblance/Grass
       }
        pass
         {
-         iteration once_per_light
-        scene_blend add
+        // iteration once_per_light
+          //scene_blend add
  
           vertex_program_ref Simple_Perpixel_Vert
           { 

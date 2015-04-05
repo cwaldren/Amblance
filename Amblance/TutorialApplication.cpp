@@ -32,7 +32,10 @@ void TutorialApplication::createScene(void)
 	mSceneMgr->setShadowTechnique(Ogre::SHADOWDETAILTYPE_TEXTURE);
 	mSceneMgr->setShadowTextureFSAA(2);
 	mSceneMgr->setShadowTextureSize(2048);
-	
+	Ogre::ColourValue fadeColour(0.9, 0.9, 0.9);
+	mWindow->getViewport(0)->setBackgroundColour(fadeColour);
+	mSceneMgr->setFog(Ogre::FOG_LINEAR, fadeColour, 0.0, 10, 500);
+
 
 	Ogre::Entity* entAmbulance = mSceneMgr->createEntity("Ambulance", "amblance.mesh");
 	entAmbulance->setCastShadows(true);
@@ -52,10 +55,10 @@ void TutorialApplication::createScene(void)
 
 	
 	Ogre::MeshManager::getSingleton().createPlane("ground", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
-		plane, 2048*40, 2048*40, 100, 100, true, 1, 400, 400, Ogre::Vector3::UNIT_Z);
+		plane, 2048*40, 2048*40, 20, 20, true, 1, 400, 400, Ogre::Vector3::UNIT_Z);
 	
 	Ogre::MeshManager::getSingleton().createPlane("road", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
-		road, 512,2048 * 40, 100, 100, true, 1, 1, 400, Ogre::Vector3::UNIT_Z);
+		road, 512,2048 * 40, 20, 20, true, 1, 1, 400, Ogre::Vector3::UNIT_Z);
 
 	Ogre::Entity* entGround = mSceneMgr->createEntity("GroundEntity", "ground");
 	Ogre::Entity* entRoad   = mSceneMgr->createEntity("RoadEntity", "road");
@@ -86,8 +89,8 @@ void TutorialApplication::createScene(void)
 	sun->setType(Ogre::Light::LT_DIRECTIONAL);
 	
 
-	sun->setDiffuseColour(Ogre::ColourValue(.6, .6, .6));
-	sun->setSpecularColour(Ogre::ColourValue(.6, .6, .6));
+	sun->setDiffuseColour(Ogre::ColourValue(1., 1., 1.));
+	sun->setSpecularColour(Ogre::ColourValue(.3, .3, .3));
 
 	
 	sun->setDirection(.3, -.8, -1);
@@ -100,7 +103,7 @@ void TutorialApplication::createCamera()
 {
 	// Create the camera
     mCamera = mSceneMgr->createCamera("PlayerCam");
-
+	
     // Position it at 500 in Z direction
     mCamera->setPosition(Ogre::Vector3(0,150,-70));
     // Look back along -Z
@@ -134,7 +137,6 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	mSceneMgr->getSceneNode("AmbulanceNode")->translate(mDirection * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 	mSceneMgr->getSceneNode("AmbulanceNode")->getChild("CameraNode")->translate(mCameraDirection * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 	mCamera->lookAt(mSceneMgr->getSceneNode("AmbulanceNode")->getPosition()+Ogre::Vector3(0,0,100));
-
 	return true;
 }
 
@@ -142,9 +144,10 @@ void TutorialApplication::createFrameListener(void)
 {
 	BaseApplication::createFrameListener();
 	mRotate = .13;
-	mMove = 512;
+	mMove = 1024;
 	mDirection = Ogre::Vector3::ZERO;
 	mCameraDirection = Ogre::Vector3::ZERO;
+
 }
 
 bool TutorialApplication::keyPressed( const OIS::KeyEvent& evt )
@@ -172,6 +175,7 @@ bool TutorialApplication::keyPressed( const OIS::KeyEvent& evt )
 	case OIS::KC_PGUP:
 		mCameraDirection.y = -10;
 		break;
+	
 
 	default:
 		break;

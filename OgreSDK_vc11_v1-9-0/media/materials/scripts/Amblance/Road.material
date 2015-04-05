@@ -26,7 +26,7 @@ vertex_program Simple_Perpixel_Vert cg
          param_named exponent float 127
              //VERY high value, to produce large highlights
  
-         param_named ambient float4 0.0 0.0 0.0 1.0
+         param_named ambient float4 0.2 0.2 0.2 1.0
              //faint environment lighting
        } 
  
@@ -47,8 +47,8 @@ material Amblance/Road
       }
        pass
         {
-          iteration once_per_light
-         scene_blend add
+          //iteration once_per_light
+        //  scene_blend add
  
           vertex_program_ref Simple_Perpixel_Vert
           { 
