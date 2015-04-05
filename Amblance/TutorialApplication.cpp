@@ -105,8 +105,8 @@ void TutorialApplication::createScene(void)
 	Ogre::SceneNode* carNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("CarNode");
 	carNode->attachObject(car);
 
-	carNode->scale(Ogre::Vector3(5,4,-5));
-	carNode->setPosition(25,25, 1500);
+	carNode->scale(Ogre::Vector3(20,16,-20));
+	carNode->setPosition(45,85, respawnDist);
 	//-------------------------------------------------------------------
 	Ogre::Entity* car2 = mSceneMgr->createEntity("car2", "amblance.mesh");
 	car2->setCastShadows(true);
@@ -115,8 +115,8 @@ void TutorialApplication::createScene(void)
 	Ogre::SceneNode* carNode2 = mSceneMgr->getRootSceneNode()->createChildSceneNode("CarNode2");
 	carNode2->attachObject(car2);
 
-	carNode2->scale(Ogre::Vector3(5,4,5));
-	carNode2->setPosition(-35,25, 1500);
+	carNode2->scale(Ogre::Vector3(20,16,20));
+	carNode2->setPosition(-80,85, respawnDist);
 	
 }
 
@@ -164,14 +164,14 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	}
 	mSceneMgr->getSceneNode("AmbulanceNode")->translate(mDirection * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 	//op car
-	if(mSceneMgr->getSceneNode("CarNode")->getPosition().z < mSceneMgr->getSceneNode("AmbulanceNode")->getPosition().z - 100) {
-		mSceneMgr->getSceneNode("CarNode")->setPosition(25,25,mSceneMgr->getSceneNode("AmbulanceNode")->getPosition().z + respawnDist);
+	if(mSceneMgr->getSceneNode("CarNode")->getPosition().z < mSceneMgr->getSceneNode("AmbulanceNode")->getPosition().z - 300) {
+		mSceneMgr->getSceneNode("CarNode")->setPosition(45,85,mSceneMgr->getSceneNode("AmbulanceNode")->getPosition().z + respawnDist);
 	} else {
 		mSceneMgr->getSceneNode("CarNode")->translate(mCarMoveT * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 	}
 	//op car2
-	if(mSceneMgr->getSceneNode("CarNode2")->getPosition().z < mSceneMgr->getSceneNode("AmbulanceNode")->getPosition().z - 100) {
-		mSceneMgr->getSceneNode("CarNode2")->setPosition(-35,25,mSceneMgr->getSceneNode("AmbulanceNode")->getPosition().z + respawnDist);
+	if(mSceneMgr->getSceneNode("CarNode2")->getPosition().z < mSceneMgr->getSceneNode("AmbulanceNode")->getPosition().z - 500) {
+		mSceneMgr->getSceneNode("CarNode2")->setPosition(-80,85,mSceneMgr->getSceneNode("AmbulanceNode")->getPosition().z + respawnDist);
 	} else {
 		mSceneMgr->getSceneNode("CarNode2")->translate(mCarMoveA * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 	}
@@ -186,15 +186,15 @@ void TutorialApplication::createFrameListener(void)
 	BaseApplication::createFrameListener();
 	mRotate = .13;
 
-	mMove = 1024;
-	leftBound = 100;
-	rightBound = -107;
-	mDirection = Ogre::Vector3(0,0,500);
+	mMove = 700;
+	leftBound = 170;
+	rightBound = -200;
+	mDirection = Ogre::Vector3(0,0,1500);
 	mCameraDirection = Ogre::Vector3::ZERO;
 	//op cars
-	mCarMoveT = Ogre::Vector3(0,0,-250);
-	mCarMoveA = Ogre::Vector3(0,0,250);
-	respawnDist = 1500;
+	mCarMoveT = Ogre::Vector3(0,0,-1024);
+	mCarMoveA = Ogre::Vector3(0,0,1024);
+	respawnDist = 3000;
 }
 
 bool TutorialApplication::keyPressed( const OIS::KeyEvent& evt )
@@ -205,10 +205,10 @@ bool TutorialApplication::keyPressed( const OIS::KeyEvent& evt )
 		mShutDown = true;
 		break;
 	case OIS::KC_W:
-		mDirection.z = mMove;
+		//mDirection.z = mMove;
 		break;
 	case OIS::KC_S:
-		mDirection.z = -mMove;
+		//mDirection.z = -mMove;
 		break;
 	case OIS::KC_A:
 		mDirection.x = mMove;
@@ -234,11 +234,11 @@ bool TutorialApplication::keyReleased( const OIS::KeyEvent& evt )
 	switch (evt.key)
 	{
 	case OIS::KC_W:
-		mDirection.z = 0;
+		//mDirection.z = 0;
 		break;
  
 	case OIS::KC_S:
-		mDirection.z = 0;
+		//mDirection.z = 0;
 		break;
  
 	case OIS::KC_A:
