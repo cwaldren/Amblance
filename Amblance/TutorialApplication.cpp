@@ -39,16 +39,16 @@ void TutorialApplication::createScene(void)
 	node->attachObject(entAmbulance);
 
 	//-----------
-	Ogre::SceneNode* node2 = node->createChildSceneNode(
-		Ogre::Vector3(0,0,-35));
+	Ogre::SceneNode* node2 = node->createChildSceneNode("CameraNode", Ogre::Vector3(0,-10,-25));
 	node2->attachObject(mCamera);
 	//------------
-	node->scale(Ogre::Vector3(5,5,5));
 
 	node->scale(Ogre::Vector3(5,4,5));
 
 	node->setPosition(0,20, 100);
-	
+	node->scale(Ogre::Vector3(5,4,5));
+	node->setPosition(0,25, 100);
+
 	Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
 	Ogre::Plane road(Ogre::Vector3::UNIT_Y, 4);
 
@@ -71,17 +71,17 @@ void TutorialApplication::createScene(void)
 	entRoad->setCastShadows(false);
 
 
-	Ogre::Light* pointLight = mSceneMgr->createLight("pointLight");
-	pointLight->setType(Ogre::Light::LT_POINT);
-	pointLight->setPosition(Ogre::Vector3(200,200,0));
+	Ogre::Light* sun = mSceneMgr->createLight("sun");
+	sun->setType(Ogre::Light::LT_DIRECTIONAL);
 
 	
-	pointLight->setDiffuseColour(Ogre::ColourValue::White);
-	pointLight->setSpecularColour(Ogre::ColourValue::White);
-	//pointLight->setAttenuation(10000,1,1,1);
+	sun->setDiffuseColour(Ogre::ColourValue::White);
+	sun->setSpecularColour(Ogre::ColourValue::White);
+	sun->setDirection(.3, -.8, -1);
 	
 
 }
+
 
 void TutorialApplication::createCamera()
 {
@@ -109,68 +109,92 @@ void TutorialApplication::createViewport(void)
         Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
 }
 
-bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
-{ 
-	static bool mMouseDown = false;     // If a mouse button is depressed
-    static Ogre::Real mToggle = 0.0;    // The time left until next toggle
-    static Ogre::Real mRotate = 0.13;   // The rotate constant
-    static Ogre::Real mMove = 250; 
 
-	bool currMouse = mMouse->getMouseState().buttonDown(OIS::MB_Left);
-	if (currMouse && !mMouseDown)
-	{
-		Ogre::Light* light = mSceneMgr->getLight("pointLight");
-		light->setVisible(! light->isVisible());
-	}
-	mMouseDown = currMouse;
-
-	Ogre::Vector3 transVector = Ogre::Vector3::ZERO;
-	if (mKeyboard->isKeyDown(OIS::KC_I)) {
-		transVector.z += mMove;
-	}
-	if (mKeyboard->isKeyDown(OIS::KC_K)) {
-		transVector.z -= mMove;
-	}
-	if (mKeyboard->isKeyDown(OIS::KC_J)) {
-		if(mKeyboard->isKeyDown( OIS::KC_LSHIFT )) {
-			mSceneMgr->getSceneNode("AmbulanceNode")->yaw(Ogre::Degree(mRotate * 5));
-		} else {
-			transVector.x -= mMove; // Strafe left
-		}
-	}
-	if (mKeyboard->isKeyDown(OIS::KC_L))  {
-		if(mKeyboard->isKeyDown( OIS::KC_LSHIFT )) {
-			mSceneMgr->getSceneNode("AmbulanceNode")->yaw(Ogre::Degree(-mRotate * 5));
-		} else {
-			transVector.x += mMove; // Strafe right
-		}
-	}
-	if (mKeyboard->isKeyDown(OIS::KC_U)) // Up
-	{
-		transVector.y += mMove;
-	}
-	if (mKeyboard->isKeyDown(OIS::KC_O)) // Down
-	{
-		transVector.y -= mMove;
-	}
-	mSceneMgr->getSceneNode("AmbulanceNode")->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
-
-	
-    return true;
-}
 
 bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
+	if (mWindow->isClosed()) return false;
+	if (mShutDown) return false;
+	mKeyboard->capture();
+	mMouse->capture();
+	mTrayMgr->frameRenderingQueued(evt);
+	mSceneMgr->getSceneNode("AmbulanceNode")->translate(mDirection * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+	mSceneMgr->getSceneNode("AmbulanceNode")->getChild("CameraNode")->translate(mCameraDirection * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+
 	return true;
 }
 
 void TutorialApplication::createFrameListener(void) 
 {
 	BaseApplication::createFrameListener();
+	mRotate = .13;
+	mMove = 250;
+	mDirection = Ogre::Vector3::ZERO;
+	mCameraDirection = Ogre::Vector3::ZERO;
 }
 
-bool TutorialApplication::keyPressed( const OIS::KeyEvent& evt ){return true;}
-bool TutorialApplication::keyReleased( const OIS::KeyEvent& evt ){return true;}
+bool TutorialApplication::keyPressed( const OIS::KeyEvent& evt )
+{
+	switch(evt.key) 
+	{
+	case OIS::KC_ESCAPE:
+		mShutDown = true;
+		break;
+	case OIS::KC_W:
+		mDirection.z = mMove;
+		break;
+	case OIS::KC_S:
+		mDirection.z = -mMove;
+		break;
+	case OIS::KC_A:
+		mDirection.x = mMove;
+		break;
+	case OIS::KC_D:
+		mDirection.x = -mMove;
+		break;
+	case OIS::KC_PGDOWN:
+		mCameraDirection.y = 10;
+		break;
+	case OIS::KC_PGUP:
+		mCameraDirection.y = -10;
+		break;
+
+	default:
+		break;
+	}
+	return true;
+}
+bool TutorialApplication::keyReleased( const OIS::KeyEvent& evt )
+{
+	switch (evt.key)
+	{
+	case OIS::KC_W:
+		mDirection.z = 0;
+		break;
+ 
+	case OIS::KC_S:
+		mDirection.z = 0;
+		break;
+ 
+	case OIS::KC_A:
+		mDirection.x = 0;
+		break;
+ 
+	case OIS::KC_D:
+		mDirection.x = 0;
+		break;
+
+	case OIS::KC_PGDOWN:
+		mCameraDirection.y = 0;
+		break;
+	case OIS::KC_PGUP:
+		mCameraDirection.y = 0;
+		break;
+	default:
+		break;
+	}
+	return true;
+}
 // OIS::MouseListener
 bool TutorialApplication::mouseMoved( const OIS::MouseEvent& evt ){return true;}
 bool TutorialApplication::mousePressed( const OIS::MouseEvent& evt, OIS::MouseButtonID id ){return true;}

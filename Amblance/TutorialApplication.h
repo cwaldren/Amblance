@@ -28,10 +28,13 @@ public:
 protected:
     virtual void createScene(void);
 
+
 	virtual void createCamera(void);
 	virtual void createViewport(void);
 
 	virtual void createFrameListener(void);
+
+
 
 	virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 	
@@ -44,8 +47,9 @@ protected:
 
 	Ogre::Real mRotate;
 	Ogre::Real mMove;
-	Ogre::SceneNode *mCamNode;
 	Ogre::Vector3 mDirection;
+	Ogre::Vector3 mCameraDirection;
+
 private:
 	bool processUnbufferedInput(const Ogre::FrameEvent& evt);
 
