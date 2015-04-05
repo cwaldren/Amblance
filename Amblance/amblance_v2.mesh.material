@@ -51,7 +51,7 @@ material Material
                 texture amblance_uvs.png
                 tex_address_mode wrap
                 scale 1.0 1.0
-                tex_coord_set 1
+                tex_coord_set 0
                 colour_op modulate
             }
         }
